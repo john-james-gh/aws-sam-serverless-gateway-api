@@ -1,16 +1,17 @@
 ### Get all items
-GET https://wdsfkxctwa.execute-api.eu-west-2.amazonaws.com/Prod/ HTTP/1.1
+GET https://myhrn47h63.execute-api.eu-west-2.amazonaws.com/Prod/ HTTP/1.1
 Content-Type: application/json
-
+x-api-key: <api-key>
 
 ### Get item by id
-GET https://wdsfkxctwa.execute-api.eu-west-2.amazonaws.com/Prod/id1 HTTP/1.1
+GET https://myhrn47h63.execute-api.eu-west-2.amazonaws.com/Prod/id1 HTTP/1.1
 Content-Type: application/json
-
+x-api-key: <api-key>
 
 ### Create an item
-POST https://wdsfkxctwa.execute-api.eu-west-2.amazonaws.com/Prod/ HTTP/1.1
+POST https://myhrn47h63.execute-api.eu-west-2.amazonaws.com/Prod/ HTTP/1.1
 Content-Type: application/json
+x-api-key: <api-key>
 
 {
   "id": "id1",

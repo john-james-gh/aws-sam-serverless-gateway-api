@@ -15,6 +15,41 @@ Transform:
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:
+  # Define an explicit REST API that requires an API key
+  MyRestApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        ApiKeyRequired: true
+
+  # New usage plan resource
+  MyUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: myUsagePlan
+      ApiStages:
+        - ApiId: !Ref MyRestApi
+          Stage: Prod
+      Throttle:
+        BurstLimit: 100
+        RateLimit: 50
+
+  # New API key resource
+  MyApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Name: myApiKey
+      Enabled: true
+
+  # Associate the API key with the usage plan
+  MyUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref MyApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref MyUsagePlan
+
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
@@ -41,6 +76,7 @@ Resources:
         ApiEvent:
           Type: Api
           Properties:
+            RestApiId: !Ref MyRestApi
             Path: /
             Method: GET
   # Each Lambda function is defined by properties:
@@ -69,6 +105,7 @@ Resources:
         ApiEvent:
           Type: Api
           Properties:
+            RestApiId: !Ref MyRestApi
             Path: /{id}
             Method: GET
   # Each Lambda function is defined by properties:
@@ -97,6 +134,7 @@ Resources:
         ApiEvent:
           Type: Api
           Properties:
+            RestApiId: !Ref MyRestApi
             Path: /
             Method: POST
   # Simple syntax to create a DynamoDB table with a single attribute primary key, more in
@@ -112,5 +150,5 @@ Resources:
 
 Outputs:
   WebEndpoint:
-    Description: "REST API endpoint URL for Prod stage"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Description: "REST API endpoint URL for Prod stage with API key"
+    Value: !Sub "https://${MyRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
