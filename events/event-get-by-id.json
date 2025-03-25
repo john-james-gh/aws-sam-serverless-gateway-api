@@ -1,9 +1,5 @@
 {
-  "requestContext": {
-    "http": {
-      "method": "GET"
-    }
-  },
+  "httpMethod": "GET",
   "pathParameters": {
     "id": "id1"
   }

@@ -15,11 +15,6 @@ Transform:
 # Resources declares the AWS resources that you want to include in the stack
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:
-  MyHttpApi:
-    Type: AWS::Serverless::HttpApi
-    Properties:
-      StageName: Prod
-
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
 
@@ -43,10 +38,9 @@ Resources:
           # Make table name accessible as environment variable from function code during execution
           SAMPLE_TABLE: !Ref SampleTable
       Events:
-        HttpApi:
-          Type: HttpApi
+        ApiEvent:
+          Type: Api
           Properties:
-            ApiId: !Ref MyHttpApi
             Path: /
             Method: GET
   # Each Lambda function is defined by properties:
@@ -72,10 +66,9 @@ Resources:
           # Make table name accessible as environment variable from function code during execution
           SAMPLE_TABLE: !Ref SampleTable
       Events:
-        HttpApi:
-          Type: HttpApi
+        ApiEvent:
+          Type: Api
           Properties:
-            ApiId: !Ref MyHttpApi
             Path: /{id}
             Method: GET
   # Each Lambda function is defined by properties:
@@ -101,10 +94,9 @@ Resources:
           # Make table name accessible as environment variable from function code during execution
           SAMPLE_TABLE: !Ref SampleTable
       Events:
-        HttpApi:
-          Type: HttpApi
+        ApiEvent:
+          Type: Api
           Properties:
-            ApiId: !Ref MyHttpApi
             Path: /
             Method: POST
   # Simple syntax to create a DynamoDB table with a single attribute primary key, more in
@@ -120,5 +112,5 @@ Resources:
 
 Outputs:
   WebEndpoint:
-    Description: "HTTP API endpoint URL for Prod stage"
-    Value: !Sub "https://${MyHttpApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Description: "REST API endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
